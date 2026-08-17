@@ -13,6 +13,7 @@ const Login = () => {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { email, password } = formData;
 
@@ -57,7 +58,7 @@ const Login = () => {
         </div>
 
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h1>
-        <p className="text-slate-400 text-sm mt-1.5 mb-8">Sign in to track your PRs and rank up</p>
+        <p className="text-slate-400 text-sm mt-1.5 mb-8">Ready to beat your PR?</p>
 
         {/* Error Notification */}
         {error && (
@@ -87,14 +88,23 @@ const Login = () => {
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5 ml-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-3 pr-12 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-[10px] font-bold tracking-wider focus:outline-none transition-colors"
+              >
+                {showPassword ? 'HIDE' : 'SHOW'}
+              </button>
+            </div>
           </div>
 
           <button

@@ -187,3 +187,54 @@ exports.getExercises = async (req, res) => {
     res.status(500).json({ message: 'Server error retrieving exercises list' });
   }
 };
+
+// @route   POST api/workouts/exercises
+// @desc    Add a custom exercise definition (globally shared)
+// @access  Private
+exports.createExercise = async (req, res) => {
+  const { name, muscleGroup, description } = req.body;
+
+  try {
+    // 1. Basic validation
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({ message: 'Please enter a valid exercise name' });
+    }
+
+    if (!muscleGroup || typeof muscleGroup !== 'string') {
+      return res.status(400).json({ message: 'Please specify target muscle group' });
+    }
+
+    const validGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs'];
+    if (!validGroups.includes(muscleGroup)) {
+      return res.status(400).json({ message: 'Invalid muscle group specified' });
+    }
+
+    // 2. Prevent duplicates (case-insensitive check on name)
+    const normalizedName = name.trim();
+    const existing = await Exercise.findOne({
+      name: { $regex: new RegExp('^' + normalizedName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '$', 'i') }
+    });
+
+    if (existing) {
+      return res.status(400).json({ message: 'An exercise with this name already exists.' });
+    }
+
+    // 3. Save new Exercise
+    const exercise = new Exercise({
+      name: normalizedName,
+      muscleGroup,
+      description: description ? description.trim() : '',
+    });
+
+    await exercise.save();
+
+    res.status(201).json({
+      message: 'Exercise added successfully.',
+      exercise,
+    });
+
+  } catch (err) {
+    console.error('Create exercise error:', err.message);
+    res.status(500).json({ message: 'Server error adding exercise definition' });
+  }
+};

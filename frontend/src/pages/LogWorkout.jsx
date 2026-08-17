@@ -12,6 +12,9 @@ const LogWorkout = () => {
   const [loading, setLoading] = useState(false);
   const [fetchingExercises, setFetchingExercises] = useState(true);
   const [error, setError] = useState('');
+  const [exerciseSearch, setExerciseSearch] = useState('');
+  const [exerciseMuscleFilter, setExerciseMuscleFilter] = useState('All');
+  const muscleGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs'];
 
   // Fetch all exercises on mount
   useEffect(() => {
@@ -209,29 +212,72 @@ const LogWorkout = () => {
               </div>
             </div>
 
-            {/* Exercise Selector Card */}
-            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md flex flex-col sm:flex-row items-center gap-3">
-              <div className="flex-1 w-full">
-                <select
-                  value={selectedExerciseId}
-                  onChange={(e) => setSelectedExerciseId(e.target.value)}
-                  className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
-                >
-                  <option value="">-- Choose an Exercise to Add --</option>
-                  {exercisesList.map((ex) => (
-                    <option key={ex._id} value={ex._id}>
-                      {ex.name} ({ex.muscleGroup})
-                    </option>
-                  ))}
-                </select>
+            {/* Exercise Selector Panel with Search & Muscle Filter */}
+            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md space-y-4">
+              <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400">Add Exercise to Workout</span>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Search */}
+                <div className="sm:col-span-1">
+                  <input
+                    type="text"
+                    placeholder="Search lifts..."
+                    value={exerciseSearch}
+                    onChange={(e) => setExerciseSearch(e.target.value)}
+                    className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-brand-500 transition-all"
+                  />
+                </div>
+                
+                {/* Muscle group selector */}
+                <div className="sm:col-span-1">
+                  <select
+                    value={exerciseMuscleFilter}
+                    onChange={(e) => setExerciseMuscleFilter(e.target.value)}
+                    className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-2.5 text-slate-300 text-xs focus:outline-none focus:border-brand-500 transition-all"
+                  >
+                    <option value="All">All Muscle Groups</option>
+                    {muscleGroups.map(mg => (
+                      <option key={mg} value={mg}>{mg}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Choose matching exercise */}
+                <div className="sm:col-span-1">
+                  <select
+                    value={selectedExerciseId}
+                    onChange={(e) => setSelectedExerciseId(e.target.value)}
+                    className="w-full bg-[#0f172a]/60 border border-[#334155]/60 rounded-xl px-4 py-2.5 text-white text-xs focus:outline-none focus:border-brand-500 transition-all"
+                  >
+                    <option value="">-- Select Exercise --</option>
+                    {exercisesList
+                      .filter(ex => {
+                        const matchesSearch = ex.name.toLowerCase().includes(exerciseSearch.toLowerCase());
+                        const matchesMuscle = exerciseMuscleFilter === 'All' || ex.muscleGroup === exerciseMuscleFilter;
+                        return matchesSearch && matchesMuscle;
+                      })
+                      .map(ex => (
+                        <option key={ex._id} value={ex._id}>
+                          {ex.name}
+                        </option>
+                      ))
+                    }
+                  </select>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={handleAddExercise}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white transition-colors"
-              >
-                Add Exercise
-              </button>
+
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2">
+                <span className="text-[10px] text-slate-500">
+                  Can't find a lift? Define custom exercises in the <Link to="/exercises" className="text-brand-500 hover:underline">Exercise Library</Link>.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleAddExercise}
+                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white transition-colors"
+                >
+                  + Add Exercise Card
+                </button>
+              </div>
             </div>
 
             {/* Logged Exercises Cards Stack */}

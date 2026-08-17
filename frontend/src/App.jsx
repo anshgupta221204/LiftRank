@@ -11,6 +11,10 @@ import CreateGym from './pages/CreateGym';
 import LogWorkout from './pages/LogWorkout';
 import Workouts from './pages/Workouts';
 import Leaderboard from './pages/Leaderboard';
+import AITrainer from './pages/AITrainer';
+import Competition from './pages/Competition';
+import CompetitionDetails from './pages/CompetitionDetails';
+import Exercises from './pages/Exercises';
 
 function App() {
   return (
@@ -30,6 +34,10 @@ function App() {
             <Route path="/workouts" element={<Workouts />} />
             <Route path="/workouts/new" element={<LogWorkout />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/ai-coach" element={<AITrainer />} />
+            <Route path="/competition" element={<Competition />} />
+            <Route path="/competition/:competitionId" element={<CompetitionDetails />} />
+            <Route path="/exercises" element={<Exercises />} />
           </Route>
 
           {/* Fallback Redirection */}

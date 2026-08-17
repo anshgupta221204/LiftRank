@@ -4,10 +4,20 @@ const gymController = require('../controllers/gymController');
 const leaderboardController = require('../controllers/leaderboardController');
 const auth = require('../middleware/auth');
 
-// @route   GET api/gyms/my/leaderboard
-// @desc    Get user's gym leaderboard rankings
+// @route   GET api/gyms/:gymId/leaderboard/overall
+// @desc    Get overall gym rankings based on average PR 1RM
 // @access  Private
-router.get('/my/leaderboard', auth, leaderboardController.getGymLeaderboard);
+router.get('/:gymId/leaderboard/overall', auth, leaderboardController.getGymOverallLeaderboard);
+
+// @route   GET api/gyms/:gymId/leaderboard/muscle/:muscleGroup
+// @desc    Get leaderboard rankings for a specific muscle group in a gym
+// @access  Private
+router.get('/:gymId/leaderboard/muscle/:muscleGroup', auth, leaderboardController.getGymMuscleGroupLeaderboard);
+
+// @route   GET api/gyms/:gymId/leaderboard/:exerciseId
+// @desc    Get leaderboard rankings for a specific exercise in a gym
+// @access  Private
+router.get('/:gymId/leaderboard/:exerciseId', auth, leaderboardController.getGymLeaderboard);
 
 // @route   POST api/gyms
 // @desc    Create a new gym

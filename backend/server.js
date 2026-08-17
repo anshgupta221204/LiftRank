@@ -32,6 +32,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/gyms', require('./routes/gymRoutes'));
 app.use('/api/workouts', require('./routes/workoutRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/api/competitions', require('./routes/friendGroupRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

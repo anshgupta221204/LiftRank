@@ -26,4 +26,9 @@ router.get('/prs', workoutController.getPRs);
 // @access  Private
 router.get('/exercises', workoutController.getExercises);
 
+// @route   POST api/workouts/exercises
+// @desc    Add a custom exercise definition
+// @access  Private
+router.post('/exercises', workoutController.createExercise);
+
 module.exports = router;

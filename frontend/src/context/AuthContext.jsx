@@ -48,12 +48,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (name, email, password, gym) => {
     try {
       const res = await api.post('/auth/signup', { name, email, password, gym });
-      const { token: userToken, user: userData } = res.data;
-
-      localStorage.setItem('token', userToken);
-      setToken(userToken);
-      setUser(userData);
-      return userData;
+      return res.data;
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
       throw new Error(errorMessage);

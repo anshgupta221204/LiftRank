@@ -42,18 +42,9 @@ exports.signup = async (req, res) => {
 
     await user.save();
 
-    // 4. Generate JWT token
-    const token = generateToken(user.id);
-
-    // 5. Send response
+    // 4. Send response (do not auto-login)
     res.status(201).json({
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        gym: user.gym,
-      },
+      message: 'Registration successful. Please log in.'
     });
   } catch (err) {
     console.error('Signup error:', err.message);
@@ -74,7 +65,7 @@ exports.login = async (req, res) => {
     }
 
     // 2. Check for user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('gym');
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }

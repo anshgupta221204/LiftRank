@@ -15,6 +15,7 @@ const Signup = () => {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const { name, email, password, gym } = formData;
 
@@ -44,13 +45,35 @@ const Signup = () => {
 
     try {
       await signup(name, email, password, gym);
-      navigate('/dashboard');
+      setSuccess(true);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#0f172a] via-[#0b111e] to-[#090d16]">
+        <div className="max-w-md w-full bg-[#1e293b]/30 backdrop-blur-xl border border-[#334155]/60 rounded-3xl p-8 shadow-2xl text-center transition-all duration-300 hover:border-brand-500/40">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-500/10 text-brand-400 mb-6 shadow-md shadow-brand-500/5">
+            <span className="text-3xl">🎉</span>
+          </div>
+          <h1 className="text-2xl font-extrabold text-white tracking-tight">Account Created!</h1>
+          <p className="text-slate-400 text-xs mt-3 mb-8 leading-relaxed">
+            Your LiftRank account is ready. Please log in to continue.
+          </p>
+          <Link
+            to="/login"
+            className="block w-full py-3.5 px-4 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 text-white font-semibold rounded-xl transition-all duration-300 text-center shadow-lg shadow-brand-600/10"
+          >
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#0f172a] via-[#0b111e] to-[#090d16]">
