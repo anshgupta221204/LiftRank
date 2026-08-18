@@ -172,12 +172,18 @@ exports.getPRs = async (req, res) => {
 // @desc    Get list of all exercises (optionally filter by muscleGroup)
 // @access  Private
 exports.getExercises = async (req, res) => {
-  const { muscleGroup } = req.query;
+  const { muscleGroup, equipment, search } = req.query;
 
   try {
     let query = {};
-    if (muscleGroup) {
+    if (muscleGroup && muscleGroup !== 'All') {
       query.muscleGroup = muscleGroup;
+    }
+    if (equipment && equipment !== 'All') {
+      query.equipment = equipment;
+    }
+    if (search && search.trim()) {
+      query.name = { $regex: search.trim(), $options: 'i' };
     }
 
     const exercises = await Exercise.find(query).sort({ name: 1 });

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
+import { clearSessionGreeting } from '../utils/hinglishGreetings';
 
 const AuthContext = createContext();
 
@@ -58,6 +59,7 @@ export const AuthProvider = ({ children }) => {
   // Logout handler
   const logout = () => {
     localStorage.removeItem('token');
+    clearSessionGreeting();
     setToken(null);
     setUser(null);
   };

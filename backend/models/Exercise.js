@@ -11,7 +11,17 @@ const ExerciseSchema = new mongoose.Schema(
     muscleGroup: {
       type: String,
       required: [true, 'Please specify target muscle group'],
-      enum: ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs'],
+      enum: ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs', 'Full Body', 'Cardio'],
+    },
+    category: {
+      type: String,
+      default: 'General',
+      trim: true,
+    },
+    equipment: {
+      type: String,
+      default: 'Other',
+      trim: true,
     },
     description: {
       type: String,

@@ -12,8 +12,8 @@ app.use(express.json());
 // Database Connection
 if (process.env.MONGO_URI) {
   connectDB().then(() => {
-    const seedExercises = require('./utils/seedExercises');
-    seedExercises();
+    const { seedSystemExercises } = require('./seeds/exerciseSeed');
+    seedSystemExercises();
   });
 } else {
   console.warn('Warning: MONGO_URI environment variable is not defined in the .env file.');

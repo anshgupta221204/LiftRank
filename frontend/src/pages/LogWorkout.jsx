@@ -14,7 +14,7 @@ const LogWorkout = () => {
   const [error, setError] = useState('');
   const [exerciseSearch, setExerciseSearch] = useState('');
   const [exerciseMuscleFilter, setExerciseMuscleFilter] = useState('All');
-  const muscleGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs'];
+  const muscleGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Abs', 'Full Body', 'Cardio'];
 
   // Fetch all exercises on mount
   useEffect(() => {
@@ -268,7 +268,7 @@ const LogWorkout = () => {
 
               <div className="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2">
                 <span className="text-[10px] text-slate-500">
-                  Can't find a lift? Define custom exercises in the <Link to="/exercises" className="text-brand-500 hover:underline">Exercise Library</Link>.
+                  Explore all 250+ standard lift formats in the <Link to="/exercises" className="text-brand-500 hover:underline font-semibold">Exercise Master Library</Link>.
                 </span>
                 <button
                   type="button"

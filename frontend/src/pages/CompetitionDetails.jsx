@@ -3,6 +3,21 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
+// Helper to extract a normalized string user ID from user objects
+const getUserId = (u) => {
+  if (!u) return null;
+  if (typeof u === 'string') return u;
+  return u.id || u._id || (u.user ? (u.user.id || u.user._id) : null);
+};
+
+// Helper to check if two user objects or IDs match
+const isSameUser = (u1, u2) => {
+  const id1 = getUserId(u1);
+  const id2 = getUserId(u2);
+  if (!id1 || !id2) return false;
+  return String(id1) === String(id2);
+};
+
 const CompetitionDetails = () => {
   const { competitionId } = useParams();
   const navigate = useNavigate();
@@ -243,8 +258,8 @@ const CompetitionDetails = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-1">
               {competition.members?.map((m) => {
                 if (!m) return null;
-                const isRoomOwner = m._id === competition.owner?._id || m._id === competition.owner;
-                const isUserMe = m._id === user?.id;
+                const isRoomOwner = isSameUser(m, competition.owner);
+                const isUserMe = isSameUser(m, user);
                 return (
                   <div
                     key={m._id}
@@ -389,7 +404,7 @@ const CompetitionDetails = () => {
                 </thead>
                 <tbody className="divide-y divide-[#334155]/20">
                   {leaderboardData.map((item) => {
-                    const isMe = item.user?.id === user?.id || item.user?._id === user?.id || item.user?.id === user?._id || item.user?._id === user?._id;
+                    const isMe = isSameUser(item.user, user);
                     
                     return (
                       <tr

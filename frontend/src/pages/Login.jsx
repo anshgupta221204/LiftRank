@@ -57,7 +57,7 @@ const Login = () => {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h1>
+        <h1 className="text-3xl font-extrabold text-white tracking-tight">Lift Rank</h1>
         <p className="text-slate-400 text-sm mt-1.5 mb-8">Ready to beat your PR?</p>
 
         {/* Error Notification */}

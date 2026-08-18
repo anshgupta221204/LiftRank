@@ -148,7 +148,8 @@ const Gyms = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {gyms.map((gym) => {
-              const isUserMember = user?.gym === gym._id;
+              const userGymId = typeof user?.gym === 'object' ? user?.gym?._id : user?.gym;
+              const isUserMember = userGymId ? String(userGymId) === String(gym._id) : false;
               
               return (
                 <div 

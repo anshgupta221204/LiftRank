@@ -165,28 +165,46 @@ exports.joinGym = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (user.gym) {
-      return res.status(400).json({ 
-        message: 'You are already a member of a gym. Please leave your current gym first.' 
-      });
-    }
-
     // 2. Find target gym
     const gym = await Gym.findById(gymId);
     if (!gym) {
       return res.status(404).json({ message: 'Gym not found' });
     }
 
-    // 3. Prevent duplicate memberships (failsafe)
-    if (gym.members.includes(userId)) {
-      return res.status(400).json({ message: 'You are already a member of this gym' });
+    // 3. Handle case where user is already a member of this gym
+    const isAlreadyMember = user.gym && user.gym.toString() === gymId.toString() || gym.members.some(m => m.toString() === userId.toString());
+    if (isAlreadyMember) {
+      // If user association wasn't saved, ensure both user and gym records are in sync
+      if (!user.gym) {
+        user.gym = gym._id;
+        await user.save();
+      }
+      if (!gym.members.some(m => m.toString() === userId.toString())) {
+        gym.members.push(userId);
+        await gym.save();
+      }
+      return res.status(200).json({
+        message: 'You are already a member of this gym.',
+        gym: {
+          _id: gym._id,
+          name: gym.name,
+          location: gym.location,
+          memberCount: gym.members.length
+        }
+      });
     }
 
-    // 4. Update gym members
+    // 4. Check if user is currently associated with a DIFFERENT gym
+    if (user.gym) {
+      return res.status(400).json({ 
+        message: 'You are currently a member of another gym. Please leave your current gym before joining a new one.' 
+      });
+    }
+
+    // 5. Add user to gym and save
     gym.members.push(userId);
     await gym.save();
 
-    // 5. Update user gym association
     user.gym = gym._id;
     await user.save();
 

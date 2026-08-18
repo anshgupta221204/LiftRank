@@ -124,9 +124,24 @@ const Leaderboard = () => {
     return <span className="text-slate-500 font-mono text-xs pl-2">{rank}</span>;
   };
 
+  // Helper to extract a normalized string user ID from user objects
+  const getUserId = (u) => {
+    if (!u) return null;
+    if (typeof u === 'string') return u;
+    return u.id || u._id || (u.user ? (u.user.id || u.user._id) : null);
+  };
+
+  // Helper to check if two user objects or IDs match
+  const isSameUser = (u1, u2) => {
+    const id1 = getUserId(u1);
+    const id2 = getUserId(u2);
+    if (!id1 || !id2) return false;
+    return String(id1) === String(id2);
+  };
+
   // Find current user's entry in leaderboardData safely for detailed breakdown
   const currentUserEntry = leaderboardData.find(
-    (item) => item.user?.id === user?.id || item.user?._id === user?.id || item.user?.id === user?._id || item.user?._id === user?._id
+    (item) => isSameUser(item.user, user)
   );
 
   // If user has no associated gym, prompt them to join one
@@ -368,7 +383,7 @@ const Leaderboard = () => {
                       </thead>
                       <tbody className="divide-y divide-[#334155]/20">
                         {leaderboardData.map((item) => {
-                          const isMe = item.user?.id === user?.id || item.user?._id === user?.id || item.user?.id === user?._id || item.user?._id === user?._id;
+                          const isMe = isSameUser(item.user, user);
                           
                           return (
                             <tr

@@ -78,8 +78,9 @@ const GymDetails = () => {
     }
   };
 
-  const isUserMember = user?.gym === id;
-  const hasGym = !!user?.gym;
+  const userGymId = typeof user?.gym === 'object' ? user?.gym?._id : user?.gym;
+  const isUserMember = userGymId ? String(userGymId) === String(id) : false;
+  const hasGym = !!userGymId;
 
   return (
     <div className="min-h-screen bg-[#0b111e] text-slate-100 flex flex-col">

@@ -1,0 +1,53 @@
+// Collection of 45 motivational gym & fitness quotes
+export const GYM_QUOTES = [
+  { quote: "Discipline beats motivation.", author: "Gym Proverb" },
+  { quote: "Your only limit is the one you set yourself.", author: "Mindset Rules" },
+  { quote: "Don't wish for it. Work for it.", author: "Iron Culture" },
+  { quote: "Strong body. Strong mind.", author: "LiftRank" },
+  { quote: "One more rep.", author: "Golden Era" },
+  { quote: "Progress, not perfection.", author: "Daily Grind" },
+  { quote: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+  { quote: "The hard days are what make you stronger.", author: "Aly Raisman" },
+  { quote: "Success starts with self-discipline.", author: "Dwayne Johnson" },
+  { quote: "Pain is temporary. Pride is forever.", author: "Iron Creed" },
+  { quote: "The only bad workout is the one that didn't happen.", author: "Fitness Daily" },
+  { quote: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" },
+  { quote: "Energy flows where attention goes.", author: "Tony Robbins" },
+  { quote: "Light weight, baby!", author: "Ronnie Coleman" },
+  { quote: "You don't have to be extreme, just consistent.", author: "Consistency First" },
+  { quote: "What feels impossible today will one day become your warm-up.", author: "LiftRank Motto" },
+  { quote: "No shortcuts. Just hard work.", author: "Iron Temple" },
+  { quote: "Build habits, not excuses.", author: "Peak Performance" },
+  { quote: "Doubt me now. Watch me later.", author: "Challenger Spirit" },
+  { quote: "Turn your pain into power.", author: "Warrior Mind" },
+  { quote: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
+  { quote: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Mind Over Matter" },
+  { quote: "Sweat is just fat crying.", author: "Old School Gym" },
+  { quote: "Consistency is what transforms average into excellence.", author: "Strength Academy" },
+  { quote: "It never gets easier, you just get better.", author: "Greg LeMond" },
+  { quote: "Show up. Work hard. Stay humble.", author: "Athlete Standard" },
+  { quote: "Excellence is not an act, but a habit.", author: "Aristotle" },
+  { quote: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
+  { quote: "Make your body your master, not your slave.", author: "Stoic Fitness" },
+  { quote: "You get out what you put in.", author: "Training Logic" },
+  { quote: "Focus on the process, results will follow.", author: "Grindset" },
+  { quote: "Clear your mind of can't.", author: "Samuel Johnson" },
+  { quote: "Heavy weights build strong characters.", author: "Barbell Wisdom" },
+  { quote: "Wake up with determination. Go to bed with satisfaction.", author: "Daily Objective" },
+  { quote: "Best time to start was yesterday. Next best time is now.", author: "Timeless Truth" },
+  { quote: "Greatness is earned, never given.", author: "Championship Mindset" },
+  { quote: "Push past your comfort zone.", author: "Growth Principles" },
+  { quote: "Form follows function.", author: "Architects of Iron" },
+  { quote: "Champions train, losers complain.", author: "Locker Room Creed" },
+  { quote: "Earn your rest.", author: "Recovery Philosophy" },
+  { quote: "Every day is a chance to get stronger.", author: "Daily Progress" },
+  { quote: "Iron never lies to you.", author: "Henry Rollins" },
+  { quote: "Consistency beats intensity.", author: "Longevity Rules" },
+  { quote: "Focus on your own PRs.", author: "LiftRank Ethos" },
+  { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" }
+];
+
+export const getRandomQuote = () => {
+  const index = Math.floor(Math.random() * GYM_QUOTES.length);
+  return GYM_QUOTES[index];
+};

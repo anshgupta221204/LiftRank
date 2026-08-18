@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { getRandomQuote } from '../utils/quotes';
+import { getNextHinglishGreeting } from '../utils/hinglishGreetings';
 
 const Dashboard = () => {
   const { user, logout, loadUser } = useAuth();
+  const [sessionQuote] = useState(() => getRandomQuote());
+  const [hinglishGreeting] = useState(() => getNextHinglishGreeting());
   
   // Dashboard states
   const [prs, setPrs] = useState([]);
@@ -123,76 +127,69 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8 space-y-8">
         
-        {/* Welcome Section */}
-        <div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight">Good morning, {user?.name} 👋</h2>
-          <p className="text-slate-400 text-xs mt-1.5 leading-relaxed">
-            Here's your current fitness standings and personal training log overview.
-          </p>
-        </div>
-
-        {/* Training Overview Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Dynamic Hinglish Gym Greeting & Motivation Hero */}
+        <div className="bg-gradient-to-r from-[#111a2e] via-[#1e293b]/70 to-[#111a2e] border border-[#334155]/60 rounded-3xl p-6 md:p-8 backdrop-blur-md relative overflow-hidden shadow-xl shadow-black/20">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none"></div>
           
-          {/* Gym Rank */}
-          <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md">
-            <div className="text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-2">🏆 Gym Rank</div>
-            <div className="text-2xl font-extrabold text-white font-mono">{gymRank}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Gym Overall Rank</div>
-          </div>
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">{hinglishGreeting.icon}</span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-brand-500/15 border border-brand-500/30 text-brand-400">
+                  {hinglishGreeting.title} {user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+                </span>
+              </div>
+              
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
+                "{hinglishGreeting.text}"
+              </h2>
 
-          {/* Personal Records count */}
-          <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md">
-            <div className="text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-2">💪 Personal Records</div>
-            <div className="text-2xl font-extrabold text-white font-mono">{prs.length}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Exercises logged</div>
+              <p className="text-slate-400 text-xs font-medium flex items-center gap-2">
+                <span className="text-brand-400 font-bold">Daily Quote:</span> "{sessionQuote.quote}" — <span className="italic">{sessionQuote.author}</span>
+              </p>
+            </div>
+            
+            <div className="flex-shrink-0 flex items-center gap-3">
+              <Link
+                to="/workouts/new"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 text-white font-extrabold text-xs shadow-lg shadow-brand-600/20 hover:scale-[1.02] transition-all duration-300 flex items-center gap-2.5"
+              >
+                <span className="text-base">🏋️</span>
+                <span>Start Workout</span>
+              </Link>
+            </div>
           </div>
-
-          {/* Workouts logged count */}
-          <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md">
-            <div className="text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-2">🔥 Workouts Logged</div>
-            <div className="text-2xl font-extrabold text-white font-mono">{workoutsCount}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Training sessions</div>
-          </div>
-
-          {/* Available Exercises count */}
-          <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-2xl p-5 backdrop-blur-md">
-            <div className="text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-2">🏋️ Exercises</div>
-            <div className="text-2xl font-extrabold text-white font-mono">{exercisesCount}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Library lift formats</div>
-          </div>
-
         </div>
 
-        {/* Dashboard Columns split */}
+        {/* Dashboard Main Grid Split */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Left Column: Gym & Quick Actions */}
+          {/* Left Column: Active Gym & Grid Quick Actions */}
           <div className="lg:col-span-1 space-y-6">
             
-            {/* Gym Membership Panel */}
-            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-3xl p-6 backdrop-blur-md">
-              <h3 className="text-sm font-bold text-white mb-3 tracking-tight">Active Hub</h3>
+            {/* Active Gym Membership Card */}
+            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-3xl p-6 backdrop-blur-md shadow-md">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Current Gym Hub</h3>
               
               {!gymId ? (
                 <div className="space-y-4">
-                  <div className="p-4 bg-[#0f172a]/60 border border-[#334155]/30 rounded-2xl text-center">
-                    <span className="text-2xl block mb-2">🏋️</span>
-                    <h4 className="text-xs font-bold text-white">No Gym Yet</h4>
-                    <p className="text-[10px] text-slate-500 mt-1">
-                      You're not currently associated with a gym hub.
+                  <div className="p-5 bg-[#0f172a]/60 border border-[#334155]/40 rounded-2xl text-center">
+                    <span className="text-3xl block mb-2">🏋️</span>
+                    <h4 className="text-sm font-bold text-white">No Gym Selected</h4>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Join a gym community to view rankings and compete on leaderboards.
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 gap-3">
                     <Link
                       to="/gyms/new"
-                      className="py-2.5 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white text-[10px] font-bold rounded-xl text-center transition-all"
+                      className="py-3 bg-[#1e293b]/80 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white text-xs font-bold rounded-xl text-center transition-all"
                     >
                       Create Gym
                     </Link>
                     <Link
                       to="/gyms"
-                      className="py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-[10px] font-bold rounded-xl text-center transition-all"
+                      className="py-3 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl text-center transition-all shadow-md shadow-brand-600/10"
                     >
                       Join Gym
                     </Link>
@@ -200,75 +197,95 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-4 bg-[#0f172a]/60 border border-[#334155]/30 rounded-2xl">
-                    <span className="text-[8px] font-bold uppercase tracking-wider text-slate-500">Current Gym</span>
-                    <h4 className="text-sm font-bold text-white mt-1 truncate">
-                      {user?.gym?.name || 'Your Gym'}
+                  <div className="p-4 bg-[#0f172a]/60 border border-[#334155]/40 rounded-2xl">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-brand-400">Active Gym</span>
+                    <h4 className="text-base font-bold text-white mt-1 truncate">
+                      {user?.gym?.name || 'Your Associated Gym'}
                     </h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5 truncate">
-                      📍 {user?.gym?.location || 'Unknown Location'}
+                    <p className="text-xs text-slate-400 mt-0.5 truncate flex items-center gap-1">
+                      <span>📍</span> {user?.gym?.location || 'Fitness Hub'}
                     </p>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <Link
                       to={`/gyms/${user.gym._id || user.gym}`}
-                      className="py-2 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white text-[9px] font-bold rounded-lg text-center transition-all"
+                      className="py-2.5 bg-[#1e293b]/80 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white text-[10px] font-bold rounded-xl text-center transition-all"
                     >
                       View Gym
                     </Link>
                     <button
                       type="button"
                       onClick={handleLeaveGym}
-                      className="py-2 bg-rose-950/20 border border-rose-500/30 text-rose-300 hover:bg-rose-900/40 text-[9px] font-bold rounded-lg text-center transition-all"
+                      className="py-2.5 bg-rose-950/30 border border-rose-500/30 text-rose-300 hover:bg-rose-900/40 text-[10px] font-bold rounded-xl text-center transition-all"
                     >
-                      Leave Gym
+                      Leave
                     </button>
                     <Link
                       to="/gyms"
-                      className="py-2 bg-[#0f172a]/60 border border-[#334155]/60 text-slate-300 hover:text-white text-[9px] font-bold rounded-lg text-center transition-all"
+                      className="py-2.5 bg-[#0f172a]/80 border border-[#334155]/60 text-slate-300 hover:text-white text-[10px] font-bold rounded-xl text-center transition-all"
                     >
-                      Change Gym
+                      Browse
                     </Link>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Quick Actions Panel */}
-            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-3xl p-6 backdrop-blur-md">
-              <h3 className="text-sm font-bold text-white mb-4 tracking-tight">Quick Actions</h3>
-              <div className="grid grid-cols-1 gap-2.5">
+            {/* Redesigned Grid Quick Actions */}
+            <div className="bg-[#1e293b]/20 border border-[#334155]/60 rounded-3xl p-6 backdrop-blur-md shadow-md">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Quick Actions</h3>
+              
+              <div className="grid grid-cols-2 gap-3">
                 <Link
                   to="/workouts/new"
-                  className="py-3 px-4 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs rounded-xl text-center transition-all shadow-md shadow-brand-600/10"
+                  className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-brand-600/20 to-brand-900/30 border border-brand-500/40 hover:border-brand-400 rounded-2xl transition-all duration-300 hover:scale-[1.02] group shadow-sm"
                 >
-                  Log Workout
+                  <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">🏋️</span>
+                  <span className="text-xs font-bold text-white">Log Workout</span>
+                  <span className="text-[9px] text-slate-400 mt-0.5">Record sets</span>
                 </Link>
+                
                 <Link
                   to="/exercises"
-                  className="py-3 px-4 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white font-bold text-xs rounded-xl text-center transition-all"
+                  className="flex flex-col items-center justify-center p-4 bg-[#1e293b]/40 border border-[#334155]/60 hover:border-slate-400 rounded-2xl transition-all duration-300 hover:scale-[1.02] group shadow-sm"
                 >
-                  Exercise Library
+                  <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">📚</span>
+                  <span className="text-xs font-bold text-white">Exercises</span>
+                  <span className="text-[9px] text-slate-400 mt-0.5">Master Library</span>
                 </Link>
+
                 <Link
                   to="/leaderboard"
-                  className="py-3 px-4 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white font-bold text-xs rounded-xl text-center transition-all"
+                  className="flex flex-col items-center justify-center p-4 bg-[#1e293b]/40 border border-[#334155]/60 hover:border-slate-400 rounded-2xl transition-all duration-300 hover:scale-[1.02] group shadow-sm"
                 >
-                  Gym Leaderboards
+                  <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">🏆</span>
+                  <span className="text-xs font-bold text-white">Leaderboards</span>
+                  <span className="text-[9px] text-slate-400 mt-0.5">Gym Standings</span>
                 </Link>
+
                 <Link
                   to="/competition"
-                  className="py-3 px-4 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white font-bold text-xs rounded-xl text-center transition-all"
+                  className="flex flex-col items-center justify-center p-4 bg-[#1e293b]/40 border border-[#334155]/60 hover:border-slate-400 rounded-2xl transition-all duration-300 hover:scale-[1.02] group shadow-sm"
                 >
-                  Friend Competitions
-                </Link>
-                <Link
-                  to="/ai-coach"
-                  className="py-3 px-4 bg-[#1e293b]/60 border border-[#334155]/60 text-slate-300 hover:bg-[#1e293b] hover:text-white font-bold text-xs rounded-xl text-center transition-all"
-                >
-                  🤖 AI Coach
+                  <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">👥</span>
+                  <span className="text-xs font-bold text-white">Competitions</span>
+                  <span className="text-[9px] text-slate-400 mt-0.5">Friend Rooms</span>
                 </Link>
               </div>
+
+              <Link
+                to="/ai-coach"
+                className="mt-3 flex items-center justify-between p-4 bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-purple-950/40 border border-purple-500/40 hover:border-purple-400 rounded-2xl transition-all duration-300 hover:scale-[1.01] group shadow-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl group-hover:scale-110 transition-transform">🤖</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-white">AI Coach Assistant</h4>
+                    <p className="text-[9px] text-slate-400">Get personalized workout advice & 1RM guidance</p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-purple-400 group-hover:translate-x-1 transition-transform">Ask Coach →</span>
+              </Link>
             </div>
 
           </div>

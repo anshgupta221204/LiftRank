@@ -24,7 +24,7 @@ exports.chatWithCoach = async (req, res) => {
     // 3. Initialize Google Generative AI with the system instructions
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-3.6-flash',
       systemInstruction: 
         'You are LiftRank AI Coach, a fitness and wellness assistant. ' +
         'Your goal is to help LiftRank users by answering questions about diet, exercise, and fitness progress. ' +
